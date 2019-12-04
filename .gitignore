@@ -1,3 +1,7 @@
+.vscode/
+
+.DS_Store
+
 /__pycache__/
 *.py[cod]
 *$py.class
@@ -5,12 +9,10 @@
 *.egg-info
 
 *.pkl
-
-.vscode/
+*.shv
 
 env/
-
 data/
 
 
-.DS_Store
+tex/output/*
