@@ -3,7 +3,9 @@ import sys
 import pickle
 import numpy as np
 
-from ann_model import ANNetwork, sigmoid
+from ann.models import ANNetwork
+from ann.activations import sigmoid
+
 
 np.set_printoptions(precision=16)
 
@@ -29,7 +31,7 @@ N.load_random_weights()
 N.load()
 
 
-# N.training(training_data[:], max_steps=2000, each=100)
+N.training(training_data[:], max_steps=20, each=1)
 
 # N.dump()
 

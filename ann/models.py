@@ -13,18 +13,12 @@ def assure_path_exists(path, isfile=True):
         os.makedirs(dir_path)
 
 
-def sigmoid(x, prime=False):
-    if prime:
-        return sigmoid(x) * (1 - sigmoid(x))
-    return 1 / (1 + np.exp(-x))
-
-
 class ANNetworkBase:
 
     learning_rate = 0.5
 
-    def activation_prime(self, x):
-        return np.diagflat(self.activation(x, prime=True))
+    def activation_derivitive(self, x):
+        return np.diagflat(self.activation(x, derivitive=True))
 
     def load_layers(self, layers):
         self.layers = layers
@@ -77,18 +71,17 @@ class ANNetworkBase:
         path = os.path.abspath(path)
         assure_path_exists(path)
 
-        with open(path, 'wb') as f:
+        with open(path, "wb") as f:
             pickle.dump((self.weights, self.biases), f)
 
-    def load(self, path='dump.pkl'):
+    def load(self, path="dump.pkl"):
         path = os.path.abspath(path)
 
-        with open(path, 'rb') as f:
+        with open(path, "rb") as f:
             self.weights, self.biases = pickle.load(f)
 
 
 class ANNetwork(ANNetworkBase):
-
     def forward(self, X):
         self.z = [None]
         self.a = [X]
@@ -103,8 +96,9 @@ class ANNetwork(ANNetworkBase):
         delta = self.output() - Y
 
         for layer in range(self.last, 0, -1):
-            b_delta = self.learning_rate * \
-                self.activation_prime(self.z[layer]).dot(delta)
+            b_delta = self.learning_rate * self.activation_derivitive(
+                self.z[layer]
+            ).dot(delta)
 
             self.biases[layer - 1] -= b_delta
             self.weights[layer - 1] -= b_delta.dot(self.a[layer - 1].T)
