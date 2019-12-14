@@ -1,6 +1,27 @@
+from numpy import diagflat
+
+
 class GradientDescentOptimizer:
-    def run():
-        return False
+    def __init__(self, activation, learning_rate):
+        self.learning_rate = learning_rate
+        self.activation = activation
+
+    def activation_derivitive(self, x):
+        return diagflat(self.activation(x, derivitive=True))
+
+    def run(self, layer, delta, z, a, weights, biases):
+
+        b_delta = self.learning_rate * self.activation_derivitive(z[layer]).dot(delta)
+
+        biases[layer - 1] -= b_delta
+        weights[layer - 1] -= b_delta.dot(a[layer - 1].T)
+
+        delta = None
+
+        if layer != 1:
+            delta = weights[layer - 1].T.dot(b_delta)
+
+        return delta
 
 
 class AdamOptimzer:

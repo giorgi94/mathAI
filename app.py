@@ -5,7 +5,7 @@ import numpy as np
 
 from ann.models import ANNetwork
 from ann.activations import sigmoid
-
+from ann.optimizers import GradientDescentOptimizer
 
 np.set_printoptions(precision=16)
 
@@ -16,11 +16,11 @@ with open("data/imgvec.pkl", "rb") as f:
 training_data = data[:-10]
 testing_data = data[-10:]
 
-N = ANNetwork()
+N = ANNetwork(
+    activation=sigmoid,
+    optimizer=GradientDescentOptimizer(learning_rate=0.5, activation=sigmoid),
+)
 
-N.activation = sigmoid
-
-N.learning_rate = 0.25
 
 layers = [784, 36, 36, 36, 10]
 
@@ -31,14 +31,14 @@ N.load_random_weights()
 N.load()
 
 
-N.training(training_data[:], max_steps=20, each=1)
+N.training(training_data[:], max_steps=100, each=10)
 
-# N.dump()
-
-
-print("\ncheck:")
+N.dump()
 
 
-for X, Y in training_data[:40]:
-    N.forward(X)
-    print(N.output().argmax(), Y.argmax())
+# print("\ncheck:")
+
+
+# for X, Y in training_data[:40]:
+#     N.forward(X)
+#     print(N.output().argmax(), Y.argmax())

@@ -3,6 +3,8 @@ import random
 import pickle
 import numpy as np
 
+from .optimizers import GradientDescentOptimizer
+
 
 def assure_path_exists(path, isfile=True):
     if isfile:
@@ -14,12 +16,6 @@ def assure_path_exists(path, isfile=True):
 
 
 class ANNetworkBase:
-
-    learning_rate = 0.5
-
-    def activation_derivitive(self, x):
-        return np.diagflat(self.activation(x, derivitive=True))
-
     def load_layers(self, layers):
         self.layers = layers
         self.last = len(layers) - 1
@@ -82,6 +78,10 @@ class ANNetworkBase:
 
 
 class ANNetwork(ANNetworkBase):
+    def __init__(self, activation, optimizer):
+        self.activation = activation
+        self.optimizer = optimizer
+
     def forward(self, X):
         self.z = [None]
         self.a = [X]
@@ -96,17 +96,10 @@ class ANNetwork(ANNetworkBase):
         delta = self.output() - Y
 
         for layer in range(self.last, 0, -1):
-            b_delta = self.learning_rate * self.activation_derivitive(
-                self.z[layer]
-            ).dot(delta)
 
-            self.biases[layer - 1] -= b_delta
-            self.weights[layer - 1] -= b_delta.dot(self.a[layer - 1].T)
-
-            delta = None
-
-            if layer != 1:
-                delta = self.weights[layer - 1].T.dot(b_delta)
+            delta = self.optimizer.run(
+                layer, delta, self.z, self.a, self.weights, self.biases
+            )
 
     def output(self):
         return self.a[-1]
