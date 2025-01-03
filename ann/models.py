@@ -73,6 +73,10 @@ class ANNetworkBase:
     def load(self, path="dump.pkl"):
         path = os.path.abspath(path)
 
+        if not os.path.isfile(path):
+            self.load_random_weights()
+            return
+
         with open(path, "rb") as f:
             self.weights, self.biases = pickle.load(f)
 
