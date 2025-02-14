@@ -1,0 +1,7 @@
+
+services:
+  app:
+    image: texlive/texlive 
+    volumes:
+      - ./tex:/workdir
+    working_dir: /workdir 

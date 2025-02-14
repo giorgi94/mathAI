@@ -1,0 +1,189 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{indentfirst}
+\usepackage{tikz, pgfplots}
+\usepackage{graphics}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{verbatim}
+\usepackage{mathrsfs}
+\usepackage[mathcal]{euscript}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage[a4paper]{geometry}
+
+\geometry{top=50pt, left=50pt, right=50pt}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+
+
+\pagestyle{fancy}
+\lhead{}
+\rhead{}
+\chead{}
+\lfoot{}
+\rfoot{\thepage}
+\cfoot{}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\renewcommand\cftsecdotsep{\cftdot}
+\renewcommand\cftsubsecdotsep{\cftdot}
+\renewcommand\cftsecafterpnum{\vskip5pt}
+\renewcommand\cftsubsecafterpnum{\vskip5pt}
+\renewcommand\cftsecfont{\normalfont}
+\renewcommand\cftsecpagefont{\normalfont}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftsecdotsep}}
+
+
+
+\usepackage[unicode]{hyperref}
+\hypersetup{
+    colorlinks=true,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black,
+}
+\usepackage[numbered]{bookmark}
+\usetikzlibrary{calc}
+\titleformat{\section}[block]{\Large\thesection.~}{}{0mm}{}
+\titleformat{\subsection}[block]{\it\large\thesubsection.}{}{1mm}{}
+% \titleformat{\subsection}[block]{\filcenter\large}{}{1mm}{}
+
+\titlespacing*{\section}{0mm}{10mm}{10mm}
+\titlespacing*{\subsection}{0mm}{10mm}{8mm}
+
+\def\arraystretch{1.5}
+\numberwithin{equation}{section}
+
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{hypothesis}{Hypothesis}[section]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\theoremstyle{remark}
+\newtheorem{example}{Example}[section]
+\newtheorem{remark}{Remark}[section]
+
+
+\newcommand{\dsum}{\displaystyle\sum}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\renewcommand{\mod}[1]{~\mathrm{mod}\left(#1\right)}
+\renewcommand{\emptyset}{\text{\O}}
+
+
+\newcommand{\quoted}[1]{\textquotedblleft#1\textquotedblright}
+
+
+\def\layersep{2.5cm}
+
+
+
+\usepackage{color}
+
+
+
+\begin{document}
+\title{Mathematics and Artificial Neural Network}
+\author{Giorgi Kakulashvili}
+\date{\today}
+\maketitle
+\thispagestyle{fancy}
+
+% \tableofcontents
+% \newpage
+
+
+\section{Linear Function Approximation}
+
+
+\begin{equation}\label{eq-basic-tr}
+    T(x) = f\left( Wx + b \right)
+\end{equation}
+
+\[
+    W = \begin{pmatrix}
+        w_{11} & w_{12} & \cdots & w_{1n} \\
+        w_{21} & w_{22} & \cdots & w_{2n} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        w_{m1} & w_{m2} & \cdots & w_{mn} \\
+    \end{pmatrix},
+    \quad
+    b = \begin{pmatrix}
+        b_{1}  \\
+        b_{2} \\
+        \vdots \\
+        b_{m} \\
+    \end{pmatrix},
+    \quad
+    x = \begin{pmatrix}
+        x_{1}  \\
+        x_{2} \\
+        \vdots \\
+        x_{m} \\
+    \end{pmatrix}, 
+    \quad
+    T = \begin{pmatrix}
+        t_{1}  \\
+        t_{2} \\
+        \vdots \\
+        t_{m} \\
+    \end{pmatrix}.
+\]
+
+\[
+    t_{i} = f(y_{i}) = f\left(\sum_{k=1}^{m} w_{ik} x_{k} + b_{i}\right), \quad
+    \frac{\partial t_{i}}{\partial w_{ik}} = x_{k} f'(y_{i}), \quad
+    \frac{\partial t_{i}}{\partial b_{i}} = f'(y_{i}).
+\]
+
+Let's define loss function $L$ as
+
+\begin{equation}\label{eq-basic-loss}
+    L(\hat{t};t) = L(\hat{t}_1,\dots,\hat{t}_m;t_1,\dots,t_m) = \frac{1}{2}\sum_{i=1}^{m} \left( \hat{t}_i - t_i \right)^2.
+\end{equation}
+
+where $t$ is original vector and $\hat{t}$ is computed using \eqref{eq-basic-tr}.
+
+\[
+    \delta w_{ij} =  \frac{\partial L}{\partial w_{ij}} = 
+    \sum_{i=1}^{m} \left( \hat{t}_i - t_i \right) \frac{\partial \hat{t}_{i}}{\partial w_{ij}} =
+    \sum_{i=1}^{m} \left( f(y_{i}) - t_i \right)  x_{j} f'(y_{i}) ,
+\]
+
+\[
+    \delta b_{i} =\frac{\partial L}{\partial b_{i}} = \sum_{i=1}^{m} \left( \hat{t}_i - t_i \right) \frac{\partial \hat{t}_{i}}{\partial b_{i}} =
+     \sum_{i=1}^{m} \left( f(y_{i}) - t_i \right) f'(y_{i}).
+\]
+
+Therefore, we obtain following
+
+\begin{align}
+    w_{ij} &\leftarrow w_{ij} - \gamma \delta w_{ij}, \\
+    b_{i} & \leftarrow b_{i} - \gamma \delta b_{i},
+\end{align}
+
+where $\gamma$ is some small positive constant.
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
+

@@ -16,4 +16,6 @@ env/
 data/
 
 
-tex/output/*
+tex/*
+!tex/*.tex
+!tex/*.pdf
