@@ -13,8 +13,8 @@ class NeuralBlock:
         self,
         wsize: tuple[int, int],
         bsize: tuple[int, int],
-        weight: np.array | None = None,
-        bias: np.array | None = None,
+        weight: np.ndarray | None = None,
+        bias: np.ndarray | None = None,
     ):
         if weight is None:
             self.weight = np.random.uniform(-1, 1, size=wsize)
