@@ -4,8 +4,8 @@ from .activations import ActivationFunc
 
 class NeuralBlock:
 
-    weight: np.array
-    bias: np.array
+    weight: np.ndarray
+    bias: np.ndarray
 
     activation: ActivationFunc
 
@@ -30,6 +30,20 @@ class NeuralBlock:
         else:
             self.bias = bias
 
-    def forward(self, x: np.ndarray):
+    def forward(self, x: np.ndarray) -> np.ndarray:
 
         return self.activation.calc(self.weight @ x + self.bias)
+
+    def dforward(self, x: np.ndarray) -> np.ndarray:
+
+        return self.activation.dcalc(self.weight @ x + self.bias)
+
+    def backward(self, x: np.ndarray, y: np.ndarray, gamma: float = 0.01):
+        y_hat = self.forward(x)
+
+        dy_hat = np.diagflat(self.dforward(x))
+
+        y_delta = y_hat - y
+
+        self.bias -= gamma * (dy_hat @ y_delta)
+        self.weight -= gamma * (dy_hat @ y_delta @ x.T)
