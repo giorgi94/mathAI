@@ -40,10 +40,9 @@ class NeuralBlock:
 
     def backward(self, x: np.ndarray, y: np.ndarray, gamma: float = 0.01):
         y_hat = self.forward(x)
+        dy_hat = self.dforward(x)
 
-        dy_hat = np.diagflat(self.dforward(x))
+        D = dy_hat * (y_hat - y)
 
-        y_delta = y_hat - y
-
-        self.bias -= gamma * (dy_hat @ y_delta)
-        self.weight -= gamma * (dy_hat @ y_delta @ x.T)
+        self.bias -= gamma * D
+        self.weight -= gamma * (D @ x.T)
