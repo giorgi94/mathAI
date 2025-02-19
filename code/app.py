@@ -5,15 +5,15 @@ from mathai.activations import ArcTan, TanH
 from mathai.models import NeuralBlock
 
 
-weight = np.random.rand(4, 4)
-bias = np.random.rand(4, 1)
+weight = np.random.rand(5, 4)
+bias = np.random.rand(5, 1)
 
-T0 = NeuralBlock(ArcTan(), (4, 4), (4, 1), weight=weight, bias=bias)
+T0 = NeuralBlock(ArcTan(), (5, 4), (5, 1), weight=weight, bias=bias)
 
 X_list = [np.random.rand(4, 1) for _ in range(10)]
 Y_list = [T0.forward(x) for x in X_list]
 
-T = NeuralBlock(ArcTan(), (4, 4), (4, 1))
+T = NeuralBlock(ArcTan(), (5, 4), (5, 1))
 
 
 for _ in range(50_000):

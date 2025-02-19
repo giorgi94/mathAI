@@ -9,6 +9,8 @@ class NeuralBlock:
 
     activation: ActivationFunc
 
+    chain: bool
+
     def __init__(
         self,
         activation: ActivationFunc,
@@ -16,8 +18,10 @@ class NeuralBlock:
         bsize: tuple[int, int],
         weight: np.ndarray | None = None,
         bias: np.ndarray | None = None,
+        chain: bool = False,
     ):
 
+        self.chain = chain
         self.activation = activation
 
         if weight is None:
@@ -46,3 +50,6 @@ class NeuralBlock:
 
         self.bias -= gamma * D
         self.weight -= gamma * (D @ x.T)
+
+        if self.chain:
+            x -= self.weight.T @ D

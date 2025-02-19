@@ -102,7 +102,7 @@
 % \newpage
 
 
-\section{Linear Function Approximation}
+\section{Neural Block}
 
 
 \begin{equation}\label{eq-basic-tr}
@@ -142,7 +142,8 @@
 \[
     t_{i} = f(y_{i}) = f\left(\sum_{k=1}^{m} w_{ik} x_{k} + b_{i}\right), \quad
     \frac{\partial t_{i}}{\partial w_{ik}} = x_{k} f'(y_{i}), \quad
-    \frac{\partial t_{i}}{\partial b_{i}} = f'(y_{i}).
+    \frac{\partial t_{i}}{\partial b_{i}} = f'(y_{i}), \quad
+    \frac{\partial y_{i}}{\partial x_{k}} = w_{ik}.
 \]
 
 Let's define loss function $L$ as
@@ -156,7 +157,7 @@ where $t$ is original vector and $\hat{t}$ is computed using \eqref{eq-basic-tr}
 \[
     \delta w_{ij} =  \frac{\partial L}{\partial w_{ij}} = 
     \sum_{i=1}^{m} \left( \hat{t}_i - t_i \right) \frac{\partial \hat{t}_{i}}{\partial w_{ij}} =
-    \sum_{i=1}^{m} \left( f(y_{i}) - t_i \right)  x_{j} f'(y_{i}) ,
+    \sum_{i=1}^{m} \left( f(y_{i}) - t_i \right)  x_{j} f'(y_{i}),
 \]
 
 \[
@@ -173,9 +174,17 @@ Therefore, we obtain following
 
 where $\gamma$ is some small positive constant.
 
+\section{Neural Chain}
 
-
-
+\[
+    \frac{\partial L}{\partial x_{k}} = 
+    \sum_{i=1}^{m}
+        \frac{\partial y_{i}}{\partial x_{k}}
+        \frac{\partial \hat{t}_{i}}{\partial y_{i}}
+        \frac{\partial L}{\partial \hat{t}_{i}} = 
+    \sum_{i=1}^{m}
+        w_{ik} f'(y_{i}) \left(  f(y_{i}) - t_i \right)
+\]
 
 
 
