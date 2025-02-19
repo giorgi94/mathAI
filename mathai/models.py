@@ -4,13 +4,6 @@ from .activations import ActivationFunc
 
 class NeuralBlock:
 
-    weight: np.ndarray
-    bias: np.ndarray
-
-    activation: ActivationFunc
-
-    chain: bool
-
     def __init__(
         self,
         activation: ActivationFunc,
@@ -53,3 +46,7 @@ class NeuralBlock:
 
         if self.chain:
             x -= self.weight.T @ D
+
+
+class NeuralChain:
+    pass
