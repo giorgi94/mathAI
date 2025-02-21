@@ -7,12 +7,14 @@ class NeuralBlock:
     def __init__(
         self,
         activation: ActivationFunc,
-        wsize: tuple[int, int],
-        bsize: tuple[int, int],
+        input_size: int,
+        output_size: int,
         weight: np.ndarray | None = None,
         bias: np.ndarray | None = None,
         chain: bool = False,
     ):
+        wsize = (output_size, input_size)
+        bsize = (output_size, 1)
 
         self.chain = chain
         self.activation = activation
@@ -20,11 +22,13 @@ class NeuralBlock:
         if weight is None:
             self.weight = np.random.uniform(-1, 1, size=wsize)
         else:
+            assert weight.shape == wsize, f"Weight shape should be {wsize}"
             self.weight = weight
 
         if bias is None:
             self.bias = np.random.uniform(-1, 1, size=bsize)
         else:
+            assert bias.shape == bsize, f"Bias shape should be {bsize}"
             self.bias = bias
 
     def forward(self, x: np.ndarray) -> np.ndarray:

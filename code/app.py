@@ -9,12 +9,12 @@ def example_1():
     weight = np.random.rand(5, 4)
     bias = np.random.rand(5, 1)
 
-    T0 = NeuralBlock(ArcTan(), (5, 4), (5, 1), weight=weight, bias=bias)
+    T0 = NeuralBlock(ArcTan(), 4, 5, weight=weight, bias=bias)
 
     X_list = [np.random.rand(4, 1) for _ in range(10)]
     Y_list = [T0.forward(x) for x in X_list]
 
-    T = NeuralBlock(ArcTan(), (5, 4), (5, 1))
+    T = NeuralBlock(ArcTan(), 4, 5)
 
     for _ in range(50_000):
         for x, y in zip(X_list, Y_list):
@@ -31,8 +31,8 @@ def example_2():
     weight_2 = np.random.rand(3, 5)
     bias_2 = np.random.rand(3, 1)
 
-    T1 = NeuralBlock(ArcTan(), (5, 4), (5, 1), weight=weight_1, bias=bias_1)
-    T2 = NeuralBlock(ArcTan(), (3, 5), (3, 1), weight=weight_2, bias=bias_2, chain=True)
+    T1 = NeuralBlock(ArcTan(), 4, 5, weight=weight_1, bias=bias_1)
+    T2 = NeuralBlock(ArcTan(), 5, 3, weight=weight_2, bias=bias_2, chain=True)
 
     T = lambda x: T2.forward(T1.forward(x))
 
@@ -55,5 +55,5 @@ def example_2():
 
 
 if __name__ == "__main__":
-    # example_1()
-    example_2()
+    example_1()
+    # example_2()
